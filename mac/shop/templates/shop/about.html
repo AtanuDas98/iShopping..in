@@ -1,0 +1,28 @@
+{% extends 'shop/basic.html' %}
+
+
+
+{% block JavaScript %}
+
+<script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {}
+    }
+    else {
+
+        cart = JSON.parse(localStorage.getItem('cart'));
+
+    }
+    console.log(cart)
+    var sum_cart = 0;
+
+
+
+    for (item in cart) {
+        let qty = cart[item][0];
+        sum_cart = sum_cart + qty;
+    }
+    document.getElementById('cart').innerHTML = sum_cart;
+</script>
+
+{% endblock %}

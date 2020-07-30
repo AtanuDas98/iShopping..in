@@ -1,0 +1,79 @@
+
+{% extends 'shop/basic.html' %}
+
+{% block title%} 
+{{myproducts.product_name}} - iShop
+ {% endblock %}
+
+{% block css %}
+ .container{
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 46px;
+    }
+{% endblock %}
+
+
+
+
+{% block body %} 
+
+<div class="container my-5" id="ko">
+    <div class="row">
+<div class="col-md-4">
+
+    <div class="row">
+        <img src="/media/{{myproducts.image}}" width="233px" height="233px" alt="">
+    </div>
+    <div class="row">
+        <button class="btn btn-primary mx-2 my-4">Buy Now</button>
+        <button class="btn btn-danger mx-2 my-4 cart" id="pr{{myproducts.id}}">Add To Cart</button>
+    </div>
+</div>
+
+<div class="col-md-8">
+    <h2>{{myproducts.product_name}}</h2>
+    <p><h4>Rs.{{myproducts.price}}</h4></p>
+    <p>{{myproducts.desc}}</p>
+</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block JavaScript %} 
+  <script>
+    console.log('working')
+    if(localStorage.getItem('cart')==null){
+      var cart={}
+    }
+    else{
+      cart = JSON.parse(localStorage.getItem('cart'));
+      document.getElementById('cart').innerHTML=Object.keys(cart).length;
+    }
+    $('.cart').click(function(){
+      console.log('clicked')
+      var idstr=this.id.toString();
+      console.log(idstr)
+      if (cart[idstr] !=undefined){
+        cart[idstr]=cart[idstr]+1
+      }
+      else{
+        cart[idstr]=1
+      }
+      localStorage.setItem('cart',JSON.stringify(cart));
+      console.log(cart)
+      document.getElementById('cart').innerHTML=Object.keys(cart).length;
+    });
+
+    $('#popcard').popover('show')
+
+  </script>
+  
+
+
+
+  {% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'shop/basic.html' %}
+
+
+{% block title%} Contact Us{% endblock %}
+
+{% block css %}
+.h2, h2 {
+font-size: 2rem;
+margin-top: 62px;
+}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+<div class="container">
+    <div class="col-lg-6 offset-lg-2">
+
+        <!-- THE CONTACT FORM IS HERE -->
+        <h2 id="chan">Contact me!</h2>
+        <form action="/shop/contact/" method="post">{% csrf_token %}
+            <!-- <input type="hidden" name="csrfmiddlewaretoken"
+                value="aurEbb0BHwkBFYiAfbtOtix45WGdbkEw2QMvxOMIUNfX4IKwnZwNWPoc7jqiBhJ0"> -->
+            <div class="form-group" id="alertt">
+                <label for="name">Your Name</label>
+                <input type="name" class="form-control" id="name" name="name" placeholder="Enter your Name" name="name">
+
+            </div>
+            <div class="form-group">
+                <label for="email">Your Email</label>
+                <input type="email" class="form-control" id="cemail" name="email" placeholder="Enter your Email"
+                    name="email">
+            </div>
+            <div class="form-group">
+                <label for="phone">Your Phone Number (with country code)</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter your Phone Number"
+                    name="phone">
+            </div>
+            <div class="form-group">
+                <label for="description">Describe what you want to contact me for here</label>
+                <textarea type="text" class="form-control" id="message" name="desc" placeholder="Your message"
+                    name="message"></textarea>
+            </div>
+            <!-- <div class="g-recaptcha" data-sitekey="6LdvcqwUAAAAACmPYNVoiJA7D84xLSQQt5g9p10m"><div style="width: 304px; height: 78px;"><div><iframe src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LdvcqwUAAAAACmPYNVoiJA7D84xLSQQt5g9p10m&amp;co=aHR0cHM6Ly93d3cuY29kZXdpdGhoYXJyeS5jb206NDQz&amp;hl=en&amp;v=nuX0GNR875hMLA1LR7ayD9tc&amp;size=normal&amp;cb=fyzxn4y4rp9g" width="304" height="78" role="presentation" name="a-jv13e0erleju" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><textarea id="g-recaptcha-response-2" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div> -->
+
+            <button type="submit" href="/shop/success" class="btn btn-danger mt-2 kls"
+                onclick="onclickSubmit()">Submit</button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block JavaScript %}
+<script>
+    // if(){
+
+    //     document.getElementById('alertt').innerHTML = `<a href="/shop/success"</a>`
+
+    // }
+
+
+
+
+
+
+    if (localStorage.getItem('cart') == null) {
+        var cart = {}
+    }
+    else {
+
+        cart = JSON.parse(localStorage.getItem('cart'));
+
+    }
+    console.log(cart)
+
+    var sum_cart = 0;
+
+
+
+    for (item in cart) {
+        let qty = cart[item][0];
+        sum_cart = sum_cart + qty;
+    }
+    document.getElementById('cart').innerHTML = sum_cart;
+
+
+    {% if thanku %}
+    alert('Submitted! Your query has been submitted successfully.');
+
+    // document.location = "/shop";
+    {% endif %}
+</script>
+{% endblock %}

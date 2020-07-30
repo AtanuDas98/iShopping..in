@@ -1,0 +1,157 @@
+{% extends 'shop/basic.html' %}
+
+{% block css %}
+mark {
+    background-color: yellow;
+    color: black;
+  }
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container my-2">
+    <h1>ishopping- Track Your items </h1>
+    <hr>
+</div>
+<div class="container my-4">
+    <form method="POST" action="#" id="trackerForm">{% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <span>Order id</span>
+                <input type="text" class="form-control" name="order_id" placeholder="Order id">
+            </div>
+            <div class="col">
+                <span>Email address</span>
+                <input type="text" class="form-control" name="email" placeholder="your email address">
+            </div>
+
+
+
+        </div>
+        <Button type="submit" class="btn btn-primary my-2">Track Items</Button>
+    </form>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 order-md-2 mb-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">Your Order Details</span>
+
+            </h4>
+            <div class="row">
+                <div class="col-md-12 order-md-2 mb-4">
+            <ul class="list-group mb-3" id="citems">
+
+                
+
+            </ul>
+                </div>
+            </div>
+
+            <ul id="totalo">
+
+            </ul>
+            <h4><span class="text-muted">Your Order Status</span></h4>
+
+
+            <ul class="list-group mb-3" id="itemsl">
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+
+                    <p>Please enter your unique order id and email to view your order status</p>
+                </li>
+        </div>
+        <div>
+
+            </ul>
+        </div>
+    </div>
+    {% endblock %}
+
+
+    {% block JavaScript %}
+
+
+    <script>
+        $('#trackerForm').submit(function (event) {
+            $('#itemsl').empty();
+            var formData = {
+                'order_id': $('input[name=order_id]').val(),
+                'email': $('input[name=email]').val(),
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/shop/tracker/',
+                data: formData,
+                encode: true
+            })
+                .done(function (data) {
+                    data = JSON.parse(data)
+                    $('#citems').empty();
+                    $('#totalo').empty();
+                    if (data['status']=='success') {
+                        updates = data['updates']
+                        for (i = 0; i < updates.length; i++) {
+                            let text = updates[i]['text'];
+                            let time = new Date(updates[i]['time']);
+                            // console.log(Time)
+                            mystr = `<li class="list-group-item d-flex justify-content-between lh-condensed">
+
+                            <h6 class="my-0" data-html="true" id="check1">${text}</h6>
+                            <small class="text-muted"> Time &#8594; </small>
+                            <span class="badge badge-primary badge-pill">${time}</span>
+                            </li> `
+                            $('#itemsl').append(mystr);
+                        }
+                        //fill in the order details
+                    var sum = 0;
+                    var sum_cart = 0;
+                    cart = JSON.parse(data['itemsjson']);
+                    for (item in cart) {
+                        var integer21 = parseInt(cart[item][2], 10);
+                        var integer2 = parseInt(cart[item][2], 10);
+                        integer2 = integer2 * cart[item][0];
+                        sum = sum + integer2;
+                        let name = cart[item][1];
+                        let qty = cart[item][0];
+                        let price = integer21 * cart[item][0];
+                        if(cart[item][0]>0){
+                        myStr = `<li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0" data-html="true">${name}</h6>
+                        <small class="text-muted">Quantity &#10006 </small>
+                        <span class="badge badge-primary badge-pill">${qty}</span>
+                    </div>
+
+                    <span class="text-muted"> <b>₹:${price}</span>
+
+                </li>`
+                        //                 myStr1 = `<li class="list-group-item d-flex justify-content-between mr-md-4">
+                        //   <span><b> Total (Rupees)</b></span>
+                        //   <strong><b> ₹ :${sum}</b></strong>
+                        // </li>`
+
+                        myStr1 = `<li class="list-group-item d-flex justify-content-between mr-md-4">
+          <span><b> Total (Rupees)</b></span>
+          <strong><b><mark> ₹ :${sum}</mark></b></strong>
+        </li>`
+                        $('#citems').append(myStr);
+
+                    }
+                } $('#totalo').append(myStr1);
+                    } else {
+                        mystr = `<li class="list-group-item d-flex justify-content-between lh-condensed">
+                        Sorry, We are not able to fetch this order id and email. Make sure to type correct order Id and email</li>`
+                        $('#itemsl').append(mystr);
+                        $('#citems').append(mystr);
+                    }
+                    
+                   
+                });
+            event.preventDefault();
+        });
+    </script>
+
+
+    {% endblock %}
